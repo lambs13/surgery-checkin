@@ -112,7 +112,10 @@
             background: #f5f5f5;
             color: #999;
         }
-        
+        .status-tag.occasional {
+    background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+    color: white;
+}
         @keyframes pulse {
             0%, 100% { box-shadow: 0 0 0 0 rgba(76,175,80,0.4); }
             50% { box-shadow: 0 0 0 10px rgba(76,175,80,0); }
@@ -617,8 +620,11 @@
         // 绩效系数
         const PERFORMANCE_RATE = 1.3;
         
-        // 手术日：2 = 周二，5 = 周五
-        const SURGERY_DAYS = [2, 5];
+        // 固定手术日：2 = 周二，5 = 周五
+const SURGERY_DAYS = [2, 5];
+
+// 偶尔手术日：4 = 周四，6 = 周六
+const OCCASIONAL_SURGERY_DAYS = [4, 6];
         
         // 腾讯文档收集表链接（创建后填入）
         const TENCENT_DOC_URL = '';
@@ -642,29 +648,32 @@
         }
         
         // 更新日期显示
-        function updateDateDisplay() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth() + 1;
-            const day = now.getDate();
-            const weekday = now.getDay();
-            
-            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-            
-            document.getElementById('currentDate').textContent = 
-                `${year}年${month}月${day}日`;
-            document.getElementById('weekdayText').textContent = 
-                `星期${weekdays[weekday]}`;
-            
-            const tag = document.getElementById('statusTag');
-            if (SURGERY_DAYS.includes(weekday)) {
-                tag.innerHTML = '🔴 今天是手术日';
-                tag.className = 'status-tag surgery';
-            } else {
-                tag.innerHTML = '⚪ 今天不是手术日';
-                tag.className = 'status-tag rest';
-            }
-        }
+function updateDateDisplay() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    const weekday = now.getDay();
+    
+    const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+    
+    document.getElementById('currentDate').textContent = 
+        `${year}年${month}月${day}日`;
+    document.getElementById('weekdayText').textContent = 
+        `星期${weekdays[weekday]}`;
+    
+    const tag = document.getElementById('statusTag');
+    if (SURGERY_DAYS.includes(weekday)) {
+        tag.innerHTML = '🔴 今天是手术日';
+        tag.className = 'status-tag surgery';
+    } else if (OCCASIONAL_SURGERY_DAYS.includes(weekday)) {
+        tag.innerHTML = '🟡 今天偶尔有手术';
+        tag.className = 'status-tag occasional';
+    } else {
+        tag.innerHTML = '⚪ 今天不是手术日';
+        tag.className = 'status-tag rest';
+    }
+}
         
         // 渲染人员按钮
         function renderStaffButtons() {
@@ -892,4 +901,5 @@
         init();
     </script>
 </body>
+
 </html>
